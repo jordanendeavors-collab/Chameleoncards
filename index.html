@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chameleon Studios Pro</title>
+    <style>
+:root{--bg:#09090b;--surface:#18181b;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.08);--text:#fafafa;--dim:#a1a1aa;--muted:#52525b;--stellar:#FF6B35;--success:#22c55e;--error:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+header{position:sticky;top:0;z-index:100;background:rgba(9,9,11,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 16px}
+.header-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--stellar),#f59e0b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text{font-size:18px;font-weight:800}
+.logo-text span{color:var(--stellar)}
+.nav-tabs{display:flex;gap:4px;margin-left:auto;background:var(--surface);padding:4px;border-radius:10px}
+.nav-tab{padding:8px 14px;border:none;background:transparent;color:var(--dim);font-size:12px;font-weight:600;cursor:pointer;border-radius:8px}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{background:var(--stellar);color:#fff}
+main{display:flex;height:calc(100vh - 57px)}
+.sidebar{width:260px;min-width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:14px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px}
+.sidebar-content{flex:1;overflow-y:auto;padding:12px}
+.workspace{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.workspace-toolbar{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.workspace-canvas{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:#0a0a0f}
+.right-panel{width:280px;min-width:280px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.section-title{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;margin-bottom:8px;padding:0 4px}
+.style-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:16px}
+.style-tile{aspect-ratio:1;border-radius:8px;border:2px solid var(--border);cursor:pointer;position:relative;transition:all 0.2s;overflow:hidden}
+.style-tile:hover{border-color:var(--stellar);transform:scale(1.02)}
+.style-tile.active{border-color:var(--stellar);box-shadow:0 0 12px rgba(255,107,53,0.4)}
+.style-tile-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px}
+.style-tile-label{position:absolute;bottom:0;left:0;right:0;padding:4px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:9px;text-align:center}
+.element-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:16px}
+.element-item{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.2s}
+.element-item:hover{background:var(--card);border-color:var(--stellar);transform:scale(1.1)}
+.card-container{position:relative;width:380px;aspect-ratio:5/7;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);background:#1a1a2e}
+#cardCanvas{position:absolute;inset:0;width:100%;height:100%}
+.elements-layer{position:absolute;inset:0}
+.placed-element{position:absolute;cursor:move;user-select:none;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.5))}
+.placed-element:hover{filter:drop-shadow(0 0 8px rgba(255,107,53,0.5))}
+.placed-element.selected{outline:2px dashed var(--stellar);outline-offset:4px}
+.text-block{position:absolute;cursor:move;padding:6px 10px;border:2px solid transparent;border-radius:4px;user-select:none;max-width:90%}
+.text-block:hover{border-color:rgba(255,255,255,0.3)}
+.text-block.selected{border-color:var(--stellar);background:rgba(255,107,53,0.1)}
+.text-block.editing{cursor:text;border-color:var(--success)}
+.tool-btn{padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.tool-btn:hover{background:var(--card)}
+.tool-btn.active{border-color:var(--stellar);background:rgba(255,107,53,0.15);color:var(--stellar)}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
+.panel-tab{flex:1;padding:10px;border:none;background:transparent;color:var(--dim);font-size:11px;font-weight:600;cursor:pointer}
+.panel-tab.active{color:var(--stellar);border-bottom:2px solid var(--stellar);background:var(--card)}
+.panel-content{flex:1;overflow-y:auto;padding:14px}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:10px;font-weight:600;color:var(--dim);margin-bottom:4px;text-transform:uppercase}
+.form-input,.form-textarea,.form-select{width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:var(--stellar)}
+.form-textarea{min-height:70px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{padding:10px 16px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--stellar),#e55a2b);color:#fff}
+.btn-secondary{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn-success{background:var(--success);color:#fff}
+.btn-full{width:100%}
+.btn-sm{padding:6px 10px;font-size:11px}
+.card-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.card-type-btn{padding:8px 4px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;text-align:center}
+.card-type-btn:hover{border-color:var(--stellar)}
+.card-type-btn.active{border-color:var(--stellar);background:rgba(255,107,53,0.15)}
+.card-type-btn .icon{font-size:18px;display:block;margin-bottom:2px}
+.card-type-btn .label{font-size:9px;font-weight:600}
+.template-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.template-chip{padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:12px;font-size:10px;cursor:pointer}
+.template-chip:hover{border-color:var(--stellar)}
+.text-controls{display:flex;gap:4px;flex-wrap:wrap;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:12px}
+.btn-icon{width:28px;height:28px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
+.btn-icon:hover{background:var(--card)}
+.btn-icon.active{background:var(--stellar);border-color:var(--stellar)}
+input[type="color"]{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:2px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all 0.3s}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:1100px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{margin-left:auto;background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer}
+.modal-body{flex:1;overflow-y:auto;padding:20px}
+.gallery-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{padding:6px 12px;border-radius:15px;border:1px solid var(--border);background:var(--bg);color:var(--dim);font-size:11px;cursor:pointer}
+.filter-btn:hover{border-color:var(--stellar);color:var(--text)}
+.filter-btn.active{background:var(--stellar);border-color:var(--stellar);color:#fff}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.gallery-item{aspect-ratio:5/7;border-radius:10px;overflow:hidden;cursor:pointer;position:relative;border:2px solid var(--border);transition:all 0.2s}
+.gallery-item:hover{border-color:var(--stellar);transform:translateY(-4px)}
+.gallery-item-bg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gallery-item-icon{font-size:40px;margin-bottom:6px}
+.gallery-item-overlay{position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,0.9))}
+.gallery-item-title{font-size:11px;font-weight:600}
+.gallery-item-style{font-size:9px;color:var(--dim)}
+.gallery-item-badge{position:absolute;top:6px;right:6px;padding:3px 6px;border-radius:8px;font-size:8px;font-weight:700;background:var(--stellar)}
+.drawing-overlay{position:absolute;inset:0;z-index:10}
+#drawCanvas{width:100%;height:100%;cursor:crosshair;touch-action:none}
+.draw-tools{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:6px 10px;background:rgba(0,0,0,0.85);border-radius:25px;z-index:20}
+.draw-tool{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.draw-tool:hover{border-color:var(--stellar)}
+.draw-tool.active{border-color:var(--stellar);background:var(--stellar)}
+.color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.color-dot:hover{transform:scale(1.2)}
+.color-dot.active{border-color:#fff}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--success);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:1000;transition:transform 0.3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--error)}
+@media(max-width:1200px){.right-panel{display:none}}
+@media(max-width:900px){.sidebar{width:200px;min-width:200px}.card-container{width:300px}}
+@media(max-width:768px){main{flex-direction:column;height:auto}.sidebar{width:100%;min-width:100%;max-height:35vh}.workspace-canvas{min-height:50vh}.card-container{width:85%;max-width:320px}.nav-tabs{display:none}}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo" onclick="location.reload()">
+                <div class="logo-icon">🦎</div>
+                <div class="logo-text">Chameleon <span>Studios</span></div>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active">🎨 Design</button>
+                <button class="nav-tab" onclick="openGallery()">🖼️ Gallery</button>
+                <button class="nav-tab" onclick="openHelp()">❓ Help</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-header">🎨 Styles & Elements</div>
+            <div class="sidebar-content">
+                <div class="section-title">Art Style</div>
+                <div class="style-grid" id="styleGrid"></div>
+                <div class="section-title">Elements (drag to card)</div>
+                <div class="element-grid" id="elementGrid"></div>
+                <div class="section-title">Characters</div>
+                <div class="element-grid" id="characterGrid"></div>
+                <div class="section-title">Decorations</div>
+                <div class="element-grid" id="frameGrid"></div>
+            </div>
+        </div>
+        <div class="workspace">
+            <div class="workspace-toolbar">
+                <button class="tool-btn" onclick="openGallery()">🖼️ Gallery</button>
+                <button class="tool-btn" onclick="toggleDrawMode()" id="drawModeBtn">✏️ Draw</button>
+                <button class="tool-btn" onclick="addTextBlock()">T Text</button>
+                <button class="tool-btn" onclick="generateScene()">✨ Generate</button>
+                <button class="tool-btn" onclick="clearCard()">🗑️ Clear</button>
+                <div style="margin-left:auto;display:flex;gap:6px">
+                    <button class="btn btn-success btn-sm" onclick="downloadCard()">⬇️ Download</button>
+                    <button class="btn btn-secondary btn-sm" onclick="emailCard()">📧 Email</button>
+                </div>
+            </div>
+            <div class="workspace-canvas">
+                <div class="card-container" id="cardContainer">
+                    <canvas id="cardCanvas"></canvas>
+                    <div class="elements-layer" id="elementsLayer"></div>
+                    <div class="drawing-overlay" id="drawingOverlay" style="display:none">
+                        <canvas id="drawCanvas"></canvas>
+                    </div>
+                </div>
+                <div class="draw-tools" id="drawTools" style="display:none">
+                    <button class="draw-tool active" data-tool="pen" onclick="setDrawTool('pen')">✏️</button>
+                    <button class="draw-tool" data-tool="brush" onclick="setDrawTool('brush')">🖌️</button>
+                    <button class="draw-tool" data-tool="eraser" onclick="setDrawTool('eraser')">🧽</button>
+                    <div style="width:1px;background:var(--border);margin:0 4px"></div>
+                    <div class="color-dot active" style="background:#fff" onclick="setDrawColor('#ffffff')"></div>
+                    <div class="color-dot" style="background:#ff6b6b" onclick="setDrawColor('#ff6b6b')"></div>
+                    <div class="color-dot" style="background:#feca57" onclick="setDrawColor('#feca57')"></div>
+                    <div class="color-dot" style="background:#48dbfb" onclick="setDrawColor('#48dbfb')"></div>
+                    <div class="color-dot" style="background:#1dd1a1" onclick="setDrawColor('#1dd1a1')"></div>
+                    <div style="width:1px;background:var(--border);margin:0 4px"></div>
+                    <button class="draw-tool" onclick="clearDrawing()">🗑️</button>
+                    <button class="draw-tool" onclick="finishDrawing()">✅</button>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="panel-tabs">
+                <button class="panel-tab active" data-panel="card" onclick="showPanel('card')">Card</button>
+                <button class="panel-tab" data-panel="text" onclick="showPanel('text')">Text</button>
+                <button class="panel-tab" data-panel="export" onclick="showPanel('export')">Export</button>
+            </div>
+            <div class="panel-content" id="panel-card">
+                <div class="section-title">Card Type</div>
+                <div class="card-type-grid" id="cardTypeGrid"></div>
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-textarea" id="cardMessage" placeholder="Your message..."></textarea>
+                    <div class="template-chips" id="messageChips"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">To</label>
+                        <input type="text" class="form-input" id="cardTo" placeholder="Recipient">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">From</label>
+                        <input type="text" class="form-input" id="cardFrom" placeholder="Your name">
+                    </div>
+                </div>
+                <div id="eventFields" style="display:none">
+                    <div class="section-title">Event Details</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-input" id="eventDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time</label>
+                            <input type="time" class="form-input" id="eventTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="eventLocation" placeholder="Address">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="applyCardSettings()" style="margin-top:12px">✨ Apply to Card</button>
+            </div>
+            <div class="panel-content" id="panel-text" style="display:none">
+                <div class="section-title">Text Controls</div>
+                <div class="text-controls">
+                    <select class="form-select" id="fontFamily" onchange="updateSelectedText()" style="flex:1;padding:6px">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="Times New Roman, serif">Times</option>
+                        <option value="Impact, sans-serif">Impact</option>
+                        <option value="Brush Script MT, cursive">Brush</option>
+                        <option value="Comic Sans MS, cursive">Comic</option>
+                    </select>
+                    <button class="btn-icon" onclick="changeTextSize(-2)">-</button>
+                    <span id="fontSize" style="font-size:11px;min-width:20px;text-align:center">24</span>
+                    <button class="btn-icon" onclick="changeTextSize(2)">+</button>
+                    <input type="color" id="textColor" value="#ffffff" onchange="updateSelectedText()">
+                    <button class="btn-icon" id="boldBtn" onclick="toggleBold()"><b>B</b></button>
+                    <button class="btn-icon" id="italicBtn" onclick="toggleItalic()"><i>I</i></button>
+                    <button class="btn-icon" onclick="deleteSelected()">🗑️</button>
+                </div>
+                <p style="font-size:10px;color:var(--muted);margin-bottom:12px">Click text to select • Drag to move • Double-click to edit</p>
+                <div class="section-title">Quick Add</div>
+                <button class="btn btn-secondary btn-sm btn-full" onclick="addPresetText('title')" style="margin-bottom:6px">+ Title</button>
+                <button class="btn btn-secondary btn-sm btn-full" onclick="addPresetText('message')" style="margin-bottom:6px">+ Message</button>
+                <button class="btn btn-secondary btn-sm btn-full" onclick="addPresetText('greeting')" style="margin-bottom:6px">+ Greeting</button>
+                <button class="btn btn-secondary btn-sm btn-full" onclick="addPresetText('signature')">+ Signature</button>
+            </div>
+            <div class="panel-content" id="panel-export" style="display:none">
+                <div class="section-title">Download</div>
+                <button class="btn btn-success btn-full" onclick="downloadCard()" style="margin-bottom:8px">⬇️ Download PNG</button>
+                <button class="btn btn-secondary btn-full" onclick="printCard()" style="margin-bottom:8px">🖨️ Print</button>
+                <div class="section-title" style="margin-top:16px">Share</div>
+                <button class="btn btn-secondary btn-full" onclick="emailCard()">📧 Send via Email</button>
+            </div>
+        </div>
+    </main>
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">🖼️ Template Gallery</span>
+                <button class="modal-close" onclick="closeGallery()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="gallery-filters" id="galleryFilters"></div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal" style="max-width:600px">
+            <div class="modal-header">
+                <span class="modal-title">❓ How to Use</span>
+                <button class="modal-close" onclick="closeHelp()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:grid;gap:20px">
+                    <div><h4>🎨 1. Choose Style</h4><p style="color:var(--dim);font-size:13px">Pick from 15 styles: Steampunk, Farmhouse, Victorian, Fantasy & more</p></div>
+                    <div><h4>✨ 2. Generate Scene</h4><p style="color:var(--dim);font-size:13px">Click Generate for AI backgrounds, or Draw your own art</p></div>
+                    <div><h4>🎭 3. Add Elements</h4><p style="color:var(--dim);font-size:13px">Drag characters, decorations, frames onto your card</p></div>
+                    <div><h4>✍️ 4. Add Text</h4><p style="color:var(--dim);font-size:13px">Add text, change fonts/colors/sizes, drag to position</p></div>
+                    <div><h4>📥 5. Download</h4><p style="color:var(--dim);font-size:13px">Download PNG, print, or email your creation!</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var CONFIG={email:"rayzenart@yahoo.com",company:"Stellar Studios"};
+
+var STYLES=[
+{id:"steampunk",name:"Steampunk",icon:"⚙️",colors:["#8B4513","#D4A574","#C9A227"],bg:["#1a1510","#2c2218"]},
+{id:"farmhouse",name:"Farmhouse",icon:"🏡",colors:["#8FBC8F","#DEB887","#CD853F"],bg:["#f5f0e8","#e8e0d5"]},
+{id:"victorian",name:"Victorian",icon:"👑",colors:["#800020","#DAA520","#DDA0DD"],bg:["#1a1520","#2c2028"]},
+{id:"whimsical",name:"Whimsical",icon:"🧚",colors:["#FFB6C1","#DDA0DD","#98FB98"],bg:["#faf0f5","#f0e8f5"]},
+{id:"botanical",name:"Botanical",icon:"🌿",colors:["#228B22","#90EE90","#6B8E23"],bg:["#f0f8f0","#e0f0e0"]},
+{id:"celestial",name:"Celestial",icon:"🌙",colors:["#191970","#FFD700","#9370DB"],bg:["#0a0a20","#151530"]},
+{id:"nautical",name:"Nautical",icon:"⚓",colors:["#000080","#F5F5F5","#DC143C"],bg:["#e8f0f8","#d8e8f5"]},
+{id:"woodland",name:"Woodland",icon:"🦊",colors:["#8B4513","#228B22","#2F4F4F"],bg:["#1a1f15","#252a20"]},
+{id:"artdeco",name:"Art Deco",icon:"💎",colors:["#FFD700","#000000","#C0C0C0"],bg:["#0a0a0a","#1a1a1a"]},
+{id:"boho",name:"Bohemian",icon:"🪶",colors:["#CD853F","#DEB887","#8FBC8F"],bg:["#f5ebe0","#e8ddd0"]},
+{id:"kawaii",name:"Kawaii",icon:"🌸",colors:["#FFB7C5","#FFDAB9","#E6E6FA"],bg:["#fff5f8","#fff0f5"]},
+{id:"gothic",name:"Gothic",icon:"🦇",colors:["#1a1a2e","#4a0e0e","#800080"],bg:["#0a0a10","#15151f"]},
+{id:"watercolor",name:"Watercolor",icon:"🎨",colors:["#87CEEB","#DDA0DD","#98FB98"],bg:["#fafafa","#f5f5f5"]},
+{id:"storybook",name:"Storybook",icon:"📚",colors:["#8B4513","#F5DEB3","#4169E1"],bg:["#f8f0e0","#f0e8d8"]},
+{id:"modern",name:"Modern",icon:"🔷",colors:["#2C3E50","#E74C3C","#3498DB"],bg:["#ffffff","#f8f9fa"]}
+];
+
+var ELEMENTS={
+steampunk:["⚙️","🔧","⏱️","🎩","🥽","🔑","⚗️","🧭","💡","🎺","⛓️","🔩"],
+farmhouse:["🌻","🐓","🌾","🏡","🚜","🌽","🐄","🥛","🧺","🌿","🍎","🐷"],
+victorian:["👑","🎭","🕯️","📜","🎻","💍","🌹","☂️","🎩","💎","🏛️","🪭"],
+whimsical:["🧚","🦋","🌈","⭐","🍄","🌸","🦄","🎀","💫","🌺","🎪","🎠"],
+botanical:["🌿","🌺","🌻","🌷","🌹","🍃","🦋","🐝","🌼","🪻","🪷","🌱"],
+celestial:["🌙","⭐","✨","🌟","☀️","🪐","💫","🌠","☄️","🔮","🌌","💎"],
+nautical:["⚓","🚢","🐚","🦀","🐠","🌊","🧭","⛵","🐋","🦈","🐙","🏝️"],
+woodland:["🦊","🦌","🦉","🐿️","🍂","🌲","🍄","🐰","🦔","🪵","🌰","🐻"],
+artdeco:["💎","🔷","🔶","⬛","📐","🏛️","🎭","🥂","✨","👁️","🌟","🔲"],
+boho:["🪶","🌙","☀️","🌵","🪬","🧿","🎪","🌻","🦋","💫","🪷","🌈"],
+kawaii:["🌸","💖","⭐","🍰","🎀","🍭","🌈","💕","🦄","🍩","🧁","🎪"],
+gothic:["🦇","🕷️","🖤","⚰️","🌹","🕯️","💀","🗝️","🌙","⛓️","🦉","🏚️"],
+watercolor:["🎨","🖌️","💧","🌸","🦋","🌺","🌿","🐦","☁️","🌈","🌻","🌷"],
+storybook:["📚","🏰","🐉","👸","🦁","🐻","🌲","🍄","⭐","🌙","🎭","🦋"],
+modern:["🔷","⬛","⬜","🔶","📐","💎","🔲","⭕","📱","💡","🎯","✨"]
+};
+
+var CHARACTERS={
+steampunk:["🤖","👨‍🔬","👩‍🔬","🧑‍✈️","🎩","🦾"],
+farmhouse:["👨‍🌾","👩‍🌾","🧒","🐕","🐈","🐴"],
+victorian:["👸","🤴","👰","🤵","💂","🎭"],
+whimsical:["🧚","🧜‍♀️","🧝","👼","🦄","🐰"],
+botanical:["🦋","🐝","🐦","🦜","🐿️","🦢"],
+celestial:["👼","🧙","🧚","🌟","👽","🤖"],
+nautical:["🧜‍♀️","🧜‍♂️","👨‍✈️","🏴‍☠️","🦭","🐬"],
+woodland:["🧝","🦊","🦌","🐰","🦉","🐿️"],
+artdeco:["💃","🕺","🎭","👯","🎩","👸"],
+boho:["🧘","🦋","🌻","🌙","☀️","🪶"],
+kawaii:["👧","🐱","🐰","🐻","🦊","🐼"],
+gothic:["🧛","👻","🦇","🐈‍⬛","🕷️","💀"],
+watercolor:["🧑‍🎨","🦋","🐦","🌸","🐝","🦢"],
+storybook:["👸","🤴","🐉","🦁","🐻","🧙"],
+modern:["🧑‍💼","👨‍💻","👩‍🎨","🤖","👤","💼"]
+};
+
+var FRAMES=["🔲","⬜","💠","❇️","✴️","💫","⭐","🌟","✨","❄️","💎","🎀"];
+
+var CARD_TYPES=[
+{id:"thankyou",name:"Thank You",icon:"🙏",templates:["Thank you!","Grateful!","You are the best!"]},
+{id:"birthday",name:"Birthday",icon:"🎂",templates:["Happy Birthday!","Make a wish!","Celebrate!"]},
+{id:"invite",name:"Invite",icon:"📨",templates:["You are invited!","Join us!","Please come!"],hasEvent:true},
+{id:"wedding",name:"Wedding",icon:"💒",templates:["Save the Date","You are invited","Forever"],hasEvent:true},
+{id:"baby",name:"Baby",icon:"👶",templates:["Welcome baby!","Bundle of joy!","Hello little one!"]},
+{id:"holiday",name:"Holiday",icon:"🎄",templates:["Happy Holidays!","Season Greetings","Joy!"]},
+{id:"congrats",name:"Congrats",icon:"🎉",templates:["Congratulations!","You did it!","So proud!"]},
+{id:"love",name:"Love",icon:"💕",templates:["I love you","Be mine","Forever yours"]},
+{id:"welcome",name:"Welcome",icon:"👋",templates:["Welcome!","Glad you are here!","Hello!"]},
+{id:"getwell",name:"Get Well",icon:"🌸",templates:["Feel better!","Sending love","Get well!"]},
+{id:"grad",name:"Graduation",icon:"🎓",templates:["Congrats grad!","You did it!","Dream big!"]},
+{id:"announce",name:"Announce",icon:"📢",templates:["Big news!","Announcing...","Save the date!"]}
+];
+
+var GALLERY=[
+{id:"g1",style:"steampunk",type:"thankyou",title:"Clockwork Thanks",featured:true},
+{id:"g2",style:"steampunk",type:"birthday",title:"Gear Birthday"},
+{id:"g3",style:"farmhouse",type:"welcome",title:"Country Welcome",featured:true},
+{id:"g4",style:"farmhouse",type:"thankyou",title:"Sunflower Thanks"},
+{id:"g5",style:"victorian",type:"wedding",title:"Elegant Wedding",featured:true},
+{id:"g6",style:"whimsical",type:"birthday",title:"Fairy Birthday",featured:true},
+{id:"g7",style:"botanical",type:"thankyou",title:"Garden Thanks",featured:true},
+{id:"g8",style:"celestial",type:"birthday",title:"Starry Birthday",featured:true},
+{id:"g9",style:"nautical",type:"invite",title:"Sailing Party"},
+{id:"g10",style:"woodland",type:"baby",title:"Forest Friends",featured:true},
+{id:"g11",style:"artdeco",type:"wedding",title:"Gatsby Wedding",featured:true},
+{id:"g12",style:"boho",type:"wedding",title:"Boho Wedding"},
+{id:"g13",style:"kawaii",type:"birthday",title:"Cute Birthday",featured:true},
+{id:"g14",style:"gothic",type:"birthday",title:"Dark Birthday"},
+{id:"g15",style:"watercolor",type:"wedding",title:"Painted Love",featured:true},
+{id:"g16",style:"storybook",type:"baby",title:"Once Upon Baby",featured:true},
+{id:"g17",style:"modern",type:"congrats",title:"Clean Congrats"}
+];
+
+var currentStyle=STYLES[0];
+var currentCardType=CARD_TYPES[0];
+var placedElements=[];
+var textBlocks=[];
+var selectedItem=null;
+var idCounter=0;
+var drawMode=false;
+var drawCanvas,drawCtx;
+var isDrawing=false;
+var lastX=0,lastY=0;
+var drawTool="pen";
+var drawColor="#ffffff";
+
+function init(){
+    renderStyles();
+    renderElements();
+    renderCardTypes();
+    initCardCanvas();
+    initDragDrop();
+    renderGallery("all");
+    generateScene();
+}
+
+function initCardCanvas(){
+    var container=document.getElementById("cardContainer");
+    var canvas=document.getElementById("cardCanvas");
+    canvas.width=container.offsetWidth;
+    canvas.height=container.offsetHeight;
+    drawCanvas=document.getElementById("drawCanvas");
+    drawCtx=drawCanvas.getContext("2d");
+    drawCanvas.width=container.offsetWidth;
+    drawCanvas.height=container.offsetHeight;
+    drawCanvas.addEventListener("mousedown",startDraw);
+    drawCanvas.addEventListener("mousemove",draw);
+    drawCanvas.addEventListener("mouseup",stopDraw);
+    drawCanvas.addEventListener("mouseout",stopDraw);
+    drawCanvas.addEventListener("touchstart",function(e){e.preventDefault();var t=e.touches[0];var r=drawCanvas.getBoundingClientRect();startDraw({offsetX:t.clientX-r.left,offsetY:t.clientY-r.top});},{passive:false});
+    drawCanvas.addEventListener("touchmove",function(e){e.preventDefault();var t=e.touches[0];var r=drawCanvas.getBoundingClientRect();draw({offsetX:t.clientX-r.left,offsetY:t.clientY-r.top});},{passive:false});
+    drawCanvas.addEventListener("touchend",stopDraw);
+}
+
+function renderStyles(){
+    var html="";
+    for(var i=0;i<STYLES.length;i++){
+        var s=STYLES[i];
+        var active=s.id===currentStyle.id?" active":"";
+        html+="<div class=\"style-tile"+active+"\" data-style=\""+s.id+"\" style=\"background:linear-gradient(135deg,"+s.bg[0]+","+s.bg[1]+")\" onclick=\"selectStyle('"+s.id+"')\"><div class=\"style-tile-icon\">"+s.icon+"</div><div class=\"style-tile-label\">"+s.name+"</div></div>";
+    }
+    document.getElementById("styleGrid").innerHTML=html;
+}
+
+function renderElements(){
+    var id=currentStyle.id;
+    var elems=ELEMENTS[id]||ELEMENTS.botanical;
+    var chars=CHARACTERS[id]||CHARACTERS.botanical;
+    var elem="";
+    for(var i=0;i<elems.length;i++){
+        elem+="<div class=\"element-item\" draggable=\"true\" data-emoji=\""+elems[i]+"\">"+elems[i]+"</div>";
+    }
+    document.getElementById("elementGrid").innerHTML=elem;
+    var char="";
+    for(var i=0;i<chars.length;i++){
+        char+="<div class=\"element-item\" draggable=\"true\" data-emoji=\""+chars[i]+"\">"+chars[i]+"</div>";
+    }
+    document.getElementById("characterGrid").innerHTML=char;
+    var frame="";
+    for(var i=0;i<FRAMES.length;i++){
+        frame+="<div class=\"element-item\" draggable=\"true\" data-emoji=\""+FRAMES[i]+"\">"+FRAMES[i]+"</div>";
+    }
+    document.getElementById("frameGrid").innerHTML=frame;
+    initDragDrop();
+}
+
+function renderCardTypes(){
+    var html="";
+    for(var i=0;i<CARD_TYPES.length;i++){
+        var ct=CARD_TYPES[i];
+        var active=ct.id===currentCardType.id?" active":"";
+        html+="<div class=\"card-type-btn"+active+"\" data-type=\""+ct.id+"\" onclick=\"selectCardType('"+ct.id+"')\"><span class=\"icon\">"+ct.icon+"</span><span class=\"label\">"+ct.name+"</span></div>";
+    }
+    document.getElementById("cardTypeGrid").innerHTML=html;
+    renderMessageChips();
+}
+
+function renderMessageChips(){
+    var html="";
+    for(var i=0;i<currentCardType.templates.length;i++){
+        var t=currentCardType.templates[i];
+        html+="<span class=\"template-chip\" onclick=\"useTemplate(this)\">"+t+"</span>";
+    }
+    document.getElementById("messageChips").innerHTML=html;
+    document.getElementById("eventFields").style.display=currentCardType.hasEvent?"block":"none";
+}
+
+window.selectStyle=function(id){
+    for(var i=0;i<STYLES.length;i++){
+        if(STYLES[i].id===id){currentStyle=STYLES[i];break;}
+    }
+    renderStyles();
+    renderElements();
+    generateScene();
+    toast("Style: "+currentStyle.name);
+};
+
+window.selectCardType=function(id){
+    for(var i=0;i<CARD_TYPES.length;i++){
+        if(CARD_TYPES[i].id===id){currentCardType=CARD_TYPES[i];break;}
+    }
+    var btns=document.querySelectorAll(".card-type-btn");
+    for(var i=0;i<btns.length;i++){
+        btns[i].classList.toggle("active",btns[i].getAttribute("data-type")===id);
+    }
+    renderMessageChips();
+};
+
+window.useTemplate=function(el){
+    document.getElementById("cardMessage").value=el.textContent;
+};
+
+window.generateScene=function(){
+    var canvas=document.getElementById("cardCanvas");
+    var ctx=canvas.getContext("2d");
+    var w=canvas.width,h=canvas.height;
+    var bg=ctx.createLinearGradient(0,0,0,h);
+    bg.addColorStop(0,currentStyle.bg[0]);
+    bg.addColorStop(1,currentStyle.bg[1]);
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,w,h);
+    var colors=currentStyle.colors;
+    for(var i=0;i<12;i++){
+        var x=Math.random()*w;
+        var y=Math.random()*h;
+        var size=10+Math.random()*25;
+        var color=colors[Math.floor(Math.random()*colors.length)];
+        ctx.globalAlpha=0.1+Math.random()*0.15;
+        ctx.fillStyle=color;
+        ctx.beginPath();
+        ctx.arc(x,y,size,0,Math.PI*2);
+        ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    toast("Scene generated!");
+};
+
+function initDragDrop(){
+    var items=document.querySelectorAll(".element-item");
+    for(var i=0;i<items.length;i++){
+        items[i].addEventListener("dragstart",function(e){
+            e.dataTransfer.setData("text/plain",e.target.getAttribute("data-emoji"));
+        });
+    }
+    var layer=document.getElementById("elementsLayer");
+    layer.addEventListener("dragover",function(e){e.preventDefault();});
+    layer.addEventListener("drop",function(e){
+        e.preventDefault();
+        var emoji=e.dataTransfer.getData("text/plain");
+        if(!emoji)return;
+        var rect=e.currentTarget.getBoundingClientRect();
+        var x=((e.clientX-rect.left)/rect.width)*100;
+        var y=((e.clientY-rect.top)/rect.height)*100;
+        placeElement(emoji,x,y);
+    });
+    layer.addEventListener("click",function(e){
+        if(e.target===e.currentTarget)selectItem(null);
+    });
+}
+
+function placeElement(emoji,x,y,size){
+    size=size||36;
+    var id="elem-"+(++idCounter);
+    var elem={id:id,emoji:emoji,x:x,y:y,size:size};
+    placedElements.push(elem);
+    renderPlacedElement(elem);
+}
+
+function renderPlacedElement(elem){
+    var layer=document.getElementById("elementsLayer");
+    var div=document.createElement("div");
+    div.id=elem.id;
+    div.className="placed-element";
+    div.style.left=elem.x+"%";
+    div.style.top=elem.y+"%";
+    div.style.fontSize=elem.size+"px";
+    div.textContent=elem.emoji;
+    div.addEventListener("mousedown",function(e){startDragPlaced(e,elem);});
+    div.addEventListener("touchstart",function(e){startDragPlaced(e,elem);},{passive:false});
+    div.addEventListener("click",function(e){e.stopPropagation();selectItem(elem,"element");});
+    layer.appendChild(div);
+}
+
+function startDragPlaced(e,elem){
+    e.preventDefault();
+    selectItem(elem,"element");
+    var layer=document.getElementById("elementsLayer");
+    var rect=layer.getBoundingClientRect();
+    function move(e){
+        var cX,cY;
+        if(e.touches){cX=e.touches[0].clientX;cY=e.touches[0].clientY;}
+        else{cX=e.clientX;cY=e.clientY;}
+        elem.x=Math.max(0,Math.min(95,((cX-rect.left)/rect.width)*100));
+        elem.y=Math.max(0,Math.min(95,((cY-rect.top)/rect.height)*100));
+        var el=document.getElementById(elem.id);
+        el.style.left=elem.x+"%";
+        el.style.top=elem.y+"%";
+    }
+    function up(){
+        document.removeEventListener("mousemove",move);
+        document.removeEventListener("mouseup",up);
+        document.removeEventListener("touchmove",move);
+        document.removeEventListener("touchend",up);
+    }
+    document.addEventListener("mousemove",move);
+    document.addEventListener("mouseup",up);
+    document.addEventListener("touchmove",move,{passive:false});
+    document.addEventListener("touchend",up);
+}
+
+function selectItem(item,type){
+    var els=document.querySelectorAll(".placed-element,.text-block");
+    for(var i=0;i<els.length;i++)els[i].classList.remove("selected");
+    selectedItem=item?{item:item,type:type}:null;
+    if(item)document.getElementById(item.id).classList.add("selected");
+}
+
+window.addTextBlock=function(){
+    var id="text-"+(++idCounter);
+    var block={id:id,text:"New Text",x:30+Math.random()*40,y:30+Math.random()*40,fontSize:24,fontFamily:"Arial, sans-serif",color:"#ffffff",bold:false,italic:false,shadow:true};
+    textBlocks.push(block);
+    renderTextBlock(block);
+    selectItem(block,"text");
+    editTextBlock(block);
+};
+
+window.addPresetText=function(type){
+    var config={shadow:true,fontFamily:"Arial, sans-serif",color:"#ffffff",bold:false,italic:false};
+    if(type==="title"){config.text=currentCardType.icon+" "+currentCardType.name;config.x=50;config.y=8;config.fontSize=18;config.bold=true;}
+    else if(type==="message"){config.text=document.getElementById("cardMessage").value||"Your message";config.x=50;config.y=45;config.fontSize=26;config.fontFamily="Georgia, serif";config.bold=true;}
+    else if(type==="greeting"){config.text="Dear "+(document.getElementById("cardTo").value||"Friend")+",";config.x=15;config.y=25;config.fontSize=16;config.italic=true;}
+    else if(type==="signature"){config.text="- "+(document.getElementById("cardFrom").value||"Me");config.x=60;config.y=85;config.fontSize=16;config.fontFamily="Brush Script MT, cursive";}
+    var id="text-"+(++idCounter);
+    config.id=id;
+    textBlocks.push(config);
+    renderTextBlock(config);
+    selectItem(config,"text");
+};
+
+function renderTextBlock(block){
+    var layer=document.getElementById("elementsLayer");
+    var el=document.getElementById(block.id);
+    if(!el){
+        el=document.createElement("div");
+        el.id=block.id;
+        el.className="text-block";
+        layer.appendChild(el);
+        el.addEventListener("mousedown",function(e){startDragText(e,block);});
+        el.addEventListener("touchstart",function(e){startDragText(e,block);},{passive:false});
+        el.addEventListener("click",function(e){e.stopPropagation();selectItem(block,"text");});
+        el.addEventListener("dblclick",function(){editTextBlock(block);});
+    }
+    el.style.left=block.x+"%";
+    el.style.top=block.y+"%";
+    el.style.fontSize=block.fontSize+"px";
+    el.style.fontFamily=block.fontFamily;
+    el.style.color=block.color;
+    el.style.fontWeight=block.bold?"bold":"normal";
+    el.style.fontStyle=block.italic?"italic":"normal";
+    el.style.textShadow=block.shadow?"2px 2px 8px rgba(0,0,0,0.8)":"none";
+    el.textContent=block.text;
+}
+
+function startDragText(e,block){
+    e.preventDefault();
+    selectItem(block,"text");
+    var layer=document.getElementById("elementsLayer");
+    var rect=layer.getBoundingClientRect();
+    function move(e){
+        var cX,cY;
+        if(e.touches){cX=e.touches[0].clientX;cY=e.touches[0].clientY;}
+        else{cX=e.clientX;cY=e.clientY;}
+        block.x=Math.max(0,Math.min(85,((cX-rect.left)/rect.width)*100));
+        block.y=Math.max(0,Math.min(90,((cY-rect.top)/rect.height)*100));
+        var el=document.getElementById(block.id);
+        el.style.left=block.x+"%";
+        el.style.top=block.y+"%";
+    }
+    function up(){
+        document.removeEventListener("mousemove",move);
+        document.removeEventListener("mouseup",up);
+        document.removeEventListener("touchmove",move);
+        document.removeEventListener("touchend",up);
+    }
+    document.addEventListener("mousemove",move);
+    document.addEventListener("mouseup",up);
+    document.addEventListener("touchmove",move,{passive:false});
+    document.addEventListener("touchend",up);
+}
+
+function editTextBlock(block){
+    var el=document.getElementById(block.id);
+    el.classList.add("editing");
+    el.contentEditable=true;
+    el.focus();
+    var range=document.createRange();
+    range.selectNodeContents(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    function finish(){el.contentEditable=false;el.classList.remove("editing");block.text=el.textContent;}
+    el.addEventListener("blur",finish,{once:true});
+    el.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();el.blur();}});
+}
+
+window.updateSelectedText=function(){
+    if(!selectedItem||selectedItem.type!=="text")return;
+    var block=selectedItem.item;
+    block.fontFamily=document.getElementById("fontFamily").value;
+    block.color=document.getElementById("textColor").value;
+    renderTextBlock(block);
+};
+
+window.changeTextSize=function(delta){
+    if(!selectedItem||selectedItem.type!=="text")return;
+    var block=selectedItem.item;
+    block.fontSize=Math.max(10,Math.min(72,block.fontSize+delta));
+    document.getElementById("fontSize").textContent=block.fontSize;
+    renderTextBlock(block);
+};
+
+window.toggleBold=function(){
+    if(!selectedItem||selectedItem.type!=="text")return;
+    selectedItem.item.bold=!selectedItem.item.bold;
+    document.getElementById("boldBtn").classList.toggle("active",selectedItem.item.bold);
+    renderTextBlock(selectedItem.item);
+};
+
+window.toggleItalic=function(){
+    if(!selectedItem||selectedItem.type!=="text")return;
+    selectedItem.item.italic=!selectedItem.item.italic;
+    document.getElementById("italicBtn").classList.toggle("active",selectedItem.item.italic);
+    renderTextBlock(selectedItem.item);
+};
+
+window.deleteSelected=function(){
+    if(!selectedItem)return;
+    var el=document.getElementById(selectedItem.item.id);
+    if(el)el.remove();
+    if(selectedItem.type==="text"){
+        textBlocks=textBlocks.filter(function(b){return b.id!==selectedItem.item.id;});
+    }else{
+        placedElements=placedElements.filter(function(e){return e.id!==selectedItem.item.id;});
+    }
+    selectedItem=null;
+    toast("Deleted");
+};
+
+window.toggleDrawMode=function(){
+    drawMode=!drawMode;
+    document.getElementById("drawModeBtn").classList.toggle("active",drawMode);
+    document.getElementById("drawingOverlay").style.display=drawMode?"block":"none";
+    document.getElementById("drawTools").style.display=drawMode?"flex":"none";
+    if(drawMode)drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);
+};
+
+window.setDrawTool=function(tool){
+    drawTool=tool;
+    var tools=document.querySelectorAll(".draw-tool[data-tool]");
+    for(var i=0;i<tools.length;i++){
+        tools[i].classList.toggle("active",tools[i].getAttribute("data-tool")===tool);
+    }
+};
+
+window.setDrawColor=function(color){
+    drawColor=color;
+    var dots=document.querySelectorAll(".color-dot");
+    for(var i=0;i<dots.length;i++){
+        dots[i].classList.toggle("active",dots[i].style.background===color);
+    }
+};
+
+function startDraw(e){isDrawing=true;lastX=e.offsetX;lastY=e.offsetY;}
+function draw(e){
+    if(!isDrawing)return;
+    drawCtx.beginPath();
+    drawCtx.moveTo(lastX,lastY);
+    drawCtx.lineTo(e.offsetX,e.offsetY);
+    drawCtx.strokeStyle=drawTool==="eraser"?"rgba(0,0,0,1)":drawColor;
+    drawCtx.lineWidth=drawTool==="eraser"?12:(drawTool==="brush"?8:4);
+    drawCtx.globalCompositeOperation=drawTool==="eraser"?"destination-out":"source-over";
+    drawCtx.lineCap="round";
+    drawCtx.stroke();
+    lastX=e.offsetX;
+    lastY=e.offsetY;
+}
+function stopDraw(){isDrawing=false;}
+
+window.clearDrawing=function(){drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);};
+window.finishDrawing=function(){
+    var mainCanvas=document.getElementById("cardCanvas");
+    mainCanvas.getContext("2d").drawImage(drawCanvas,0,0);
+    toggleDrawMode();
+    toast("Drawing applied!");
+};
+
+window.showPanel=function(panel){
+    var tabs=document.querySelectorAll(".panel-tab");
+    for(var i=0;i<tabs.length;i++){
+        tabs[i].classList.toggle("active",tabs[i].getAttribute("data-panel")===panel);
+    }
+    var panels=document.querySelectorAll(".panel-content");
+    for(var i=0;i<panels.length;i++){panels[i].style.display="none";}
+    document.getElementById("panel-"+panel).style.display="block";
+};
+
+window.applyCardSettings=function(){
+    var msg=document.getElementById("cardMessage").value;
+    var to=document.getElementById("cardTo").value;
+    var from=document.getElementById("cardFrom").value;
+    if(msg)addPresetText("message");
+    if(to)addPresetText("greeting");
+    if(from)addPresetText("signature");
+    addPresetText("title");
+    toast("Settings applied!");
+};
+
+function renderGallery(filter){
+    var filterHtml="<button class=\"filter-btn"+(filter==="all"?" active":"")+"\" onclick=\"filterGallery('all')\">All</button>";
+    filterHtml+="<button class=\"filter-btn"+(filter==="featured"?" active":"")+"\" onclick=\"filterGallery('featured')\">⭐ Featured</button>";
+    for(var i=0;i<STYLES.length;i++){
+        var s=STYLES[i];
+        filterHtml+="<button class=\"filter-btn"+(filter===s.id?" active":"")+"\" onclick=\"filterGallery('"+s.id+"')\">"+s.icon+"</button>";
+    }
+    document.getElementById("galleryFilters").innerHTML=filterHtml;
+    var items=GALLERY;
+    if(filter==="featured")items=GALLERY.filter(function(g){return g.featured;});
+    else if(filter!=="all")items=GALLERY.filter(function(g){return g.style===filter;});
+    var html="";
+    for(var i=0;i<items.length;i++){
+        var g=items[i];
+        var style;
+        for(var j=0;j<STYLES.length;j++){if(STYLES[j].id===g.style){style=STYLES[j];break;}}
+        html+="<div class=\"gallery-item\" onclick=\"useGalleryTemplate('"+g.id+"')\" style=\"background:linear-gradient(135deg,"+style.bg[0]+","+style.bg[1]+")\">";
+        html+="<div class=\"gallery-item-bg\"><div class=\"gallery-item-icon\">"+style.icon+"</div></div>";
+        if(g.featured)html+="<div class=\"gallery-item-badge\">⭐</div>";
+        html+="<div class=\"gallery-item-overlay\"><div class=\"gallery-item-title\">"+g.title+"</div><div class=\"gallery-item-style\">"+style.name+"</div></div>";
+        html+="</div>";
+    }
+    document.getElementById("galleryGrid").innerHTML=html;
+}
+
+window.filterGallery=function(filter){renderGallery(filter);};
+window.useGalleryTemplate=function(id){
+    var t;
+    for(var i=0;i<GALLERY.length;i++){if(GALLERY[i].id===id){t=GALLERY[i];break;}}
+    if(!t)return;
+    selectStyle(t.style);
+    if(t.type)selectCardType(t.type);
+    closeGallery();
+    toast("Template: "+t.title);
+};
+
+window.openGallery=function(){document.getElementById("galleryModal").classList.add("open");};
+window.closeGallery=function(){document.getElementById("galleryModal").classList.remove("open");};
+window.openHelp=function(){document.getElementById("helpModal").classList.add("open");};
+window.closeHelp=function(){document.getElementById("helpModal").classList.remove("open");};
+
+window.downloadCard=function(){
+    var exp=document.createElement("canvas");
+    exp.width=800;exp.height=1120;
+    var ex=exp.getContext("2d");
+    ex.drawImage(document.getElementById("cardCanvas"),0,0,800,1120);
+    for(var i=0;i<placedElements.length;i++){
+        var elem=placedElements[i];
+        var x=(elem.x/100)*800;
+        var y=(elem.y/100)*1120;
+        var size=(elem.size/380)*800;
+        ex.font=size+"px Arial";
+        ex.fillText(elem.emoji,x,y+size);
+    }
+    for(var i=0;i<textBlocks.length;i++){
+        var block=textBlocks[i];
+        var x=(block.x/100)*800;
+        var y=(block.y/100)*1120;
+        var size=(block.fontSize/380)*800;
+        var font="";
+        if(block.italic)font+="italic ";
+        if(block.bold)font+="bold ";
+        font+=size+"px "+block.fontFamily;
+        ex.font=font;
+        ex.fillStyle=block.color;
+        if(block.shadow){ex.shadowColor="rgba(0,0,0,0.8)";ex.shadowBlur=8;ex.shadowOffsetX=2;ex.shadowOffsetY=2;}
+        else{ex.shadowColor="transparent";}
+        ex.fillText(block.text,x,y+size);
+    }
+    ex.shadowColor="transparent";
+    ex.font="11px Arial";
+    ex.fillStyle="rgba(255,255,255,0.4)";
+    ex.fillText("Made with Chameleon Studios",20,1100);
+    var link=document.createElement("a");
+    link.download="chameleon-card.png";
+    link.href=exp.toDataURL("image/png");
+    link.click();
+    toast("Downloaded!");
+};
+
+window.printCard=function(){window.print();};
+
+window.emailCard=function(){
+    var subject=encodeURIComponent(currentCardType.name+" Card");
+    var body=encodeURIComponent("Created with Chameleon Studios!\n\n"+(document.getElementById("cardMessage").value||""));
+    window.location.href="mailto:?cc="+CONFIG.email+"&subject="+subject+"&body="+body;
+    toast("Opening email...");
+};
+
+window.clearCard=function(){
+    if(!confirm("Clear everything?"))return;
+    placedElements=[];
+    textBlocks=[];
+    selectedItem=null;
+    document.getElementById("elementsLayer").innerHTML="";
+    document.getElementById("cardMessage").value="";
+    document.getElementById("cardTo").value="";
+    document.getElementById("cardFrom").value="";
+    generateScene();
+    toast("Cleared");
+};
+
+window.toast=function(msg,err){
+    var t=document.getElementById("toast");
+    t.textContent=msg;
+    t.className="toast"+(err?" error":"");
+    t.classList.add("show");
+    setTimeout(function(){t.classList.remove("show");},2500);
+};
+
+document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){closeGallery();closeHelp();if(drawMode)toggleDrawMode();selectItem(null);}
+    if((e.key==="Delete"||e.key==="Backspace")&&selectedItem&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"&&!document.activeElement.isContentEditable)deleteSelected();
+});
+
+document.addEventListener("DOMContentLoaded",init);
+})();
+</script>
+</body>
+</html>

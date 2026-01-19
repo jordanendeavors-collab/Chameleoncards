@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chameleon Studios | Creative Chameleon Artflow™</title>
+    <meta name="description" content="Draw your own card designs and watch AI transform your sketches into stunning professional artwork. Creative Chameleon Artflow™ by Stellar Studios.">
+    <meta property="og:title" content="Chameleon Studios | Creative Chameleon Artflow™">
+    <meta property="og:description" content="Draw your own card designs and watch AI transform them into stunning masterpieces.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#0D9488">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦎</text></svg>">
+    <style>
+        :root{--teal:#0D9488;--emerald:#059669;--purple:#7C3AED;--pink:#DB2777;--orange:#EA580C;--gold:#D97706;--bg:#0a0a0a;--card-bg:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.1);--text:#fafafa;--text-dim:#a1a1aa;--text-muted:#71717a;--success:#22c55e;--error:#ef4444;--stellar:#FF6B35}
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
+        @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+        @keyframes morph{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}50%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        .gradient-bg{background:linear-gradient(-45deg,var(--teal),var(--emerald),var(--purple),var(--pink),var(--orange));background-size:400% 400%;animation:shimmer 12s ease infinite}
+        .gradient-text{background:linear-gradient(-45deg,var(--teal),var(--purple),var(--pink),var(--orange));background-size:400% 400%;animation:shimmer 8s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .stellar-gradient{background:linear-gradient(-45deg,var(--stellar),var(--gold),var(--pink),var(--purple));background-size:400% 400%;animation:shimmer 8s ease infinite}
+        .glass{background:var(--card-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border)}
+        .container{max-width:1280px;margin:0 auto;padding:0 24px}.hidden{display:none!important}
+        nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:12px 24px;transition:background .3s}
+        nav.scrolled{background:rgba(10,10,10,.95);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+        .nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:12px;cursor:pointer}
+        .logo-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+        .logo-text{font-size:24px;font-weight:800}
+        .nav-links{display:flex;align-items:center;gap:8px}
+        .nav-link{background:none;border:none;color:var(--text-dim);font-size:15px;font-weight:500;cursor:pointer;padding:10px 16px;border-radius:10px;transition:all .3s}
+        .nav-link:hover,.nav-link.active{color:var(--teal);background:rgba(13,148,136,.1)}
+        .nav-cta{padding:10px 24px;border-radius:50px;border:none;font-size:15px;font-weight:600;color:#fff;cursor:pointer;margin-left:8px;transition:all .3s}
+        .nav-cta:hover{transform:translateY(-2px)}
+        .mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:28px;cursor:pointer}
+        .mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:#141414;border-bottom:1px solid var(--border);padding:20px;z-index:999}
+        .mobile-menu.open{display:block}
+        .mobile-menu .nav-link{display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:4px}
+        .mobile-menu .nav-cta{width:100%;margin:12px 0 0;padding:14px;text-align:center}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 24px 80px}
+        .hero-blob{position:absolute;opacity:.25;filter:blur(100px);animation:morph 15s ease-in-out infinite}
+        .hero-blob-1{width:500px;height:500px;top:5%;left:-10%}
+        .hero-blob-2{width:400px;height:400px;bottom:10%;right:-5%;animation-delay:-5s}
+        .hero-content{text-align:center;position:relative;z-index:10;max-width:900px}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:50px;font-size:14px;font-weight:600;margin-bottom:28px}
+        h1{font-size:clamp(40px,9vw,88px);font-weight:800;line-height:1.05;margin-bottom:24px;letter-spacing:-2px}
+        .hero-subtitle{font-size:clamp(18px,2.5vw,22px);color:var(--text-dim);max-width:650px;margin:0 auto 40px}
+        .hero-buttons{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:50px}
+        .btn{padding:16px 32px;border-radius:50px;font-size:17px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:10px;transition:all .3s}
+        .btn:hover{transform:translateY(-3px)}
+        .btn-primary{color:#fff}.btn-secondary{background:var(--card-bg);color:#fff;border:1px solid var(--border)}
+        .btn-stellar{background:var(--stellar);color:#fff}
+        .hero-tags{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+        .hero-tag{padding:8px 18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:50px;font-size:14px;color:var(--text-dim)}
+        section{padding:100px 24px}
+        .section-header{text-align:center;margin-bottom:60px}
+        .section-badge{display:inline-block;padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+        .section-title{font-size:clamp(32px,5vw,48px);font-weight:800;margin-bottom:16px}
+        .section-desc{color:var(--text-dim);max-width:600px;margin:16px auto 0;font-size:18px}
+        .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+        .feature-card{padding:36px;border-radius:24px;transition:all .3s}
+        .feature-card:hover{transform:translateY(-5px)}
+        .feature-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px}
+        .feature-card h3{font-size:22px;font-weight:700;margin-bottom:12px}
+        .feature-card p{color:var(--text-dim);font-size:15px}
+        .cta-section{padding:80px 24px}
+        .cta-box{max-width:900px;margin:0 auto;padding:60px 40px;border-radius:32px;text-align:center}
+        .cta-box h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin-bottom:16px}
+        .cta-box p{font-size:20px;opacity:.9;margin-bottom:32px}
+        .cta-box .btn{background:#fff;color:#0a0a0a}
+        .page{padding:100px 24px 60px;min-height:100vh}
+        .page-header{text-align:center;margin-bottom:48px}
+        .page-header h1{font-size:clamp(32px,5vw,48px);font-weight:800;margin-bottom:12px}
+        .page-header p{color:var(--text-dim);font-size:18px}
+        .page-header a{color:var(--stellar)}
+        .categories-scroll{overflow-x:auto;margin:0 -24px;padding:0 24px 16px}
+        .categories{display:flex;gap:12px;min-width:max-content}
+        .cat-btn{padding:16px 24px;border-radius:16px;border:2px solid transparent;background:var(--card-bg);cursor:pointer;text-align:center;transition:all .3s;color:var(--text);min-width:110px}
+        .cat-btn:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+        .cat-btn.active{border-color:var(--teal);background:rgba(13,148,136,.15)}
+        .cat-btn .icon{font-size:28px;display:block;margin-bottom:8px}
+        .cat-btn .label{font-weight:600;font-size:13px}
+        .builder{display:grid;grid-template-columns:1fr;gap:40px;margin-top:40px}
+        @media(min-width:1024px){.builder{grid-template-columns:1fr 420px}}
+        .panel{padding:32px;border-radius:24px}
+        .tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:12px;margin-bottom:24px}
+        .tab{flex:1;padding:12px 16px;border:none;background:transparent;color:var(--text-dim);font-size:14px;font-weight:500;cursor:pointer;border-radius:8px;transition:all .3s}
+        .tab:hover{color:var(--text)}.tab.active{background:var(--card-bg);color:var(--text)}
+        .form-group{margin-bottom:24px}
+        .form-label{display:block;font-size:13px;font-weight:600;color:var(--text-dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+        .input,.textarea{width:100%;padding:14px 18px;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:15px;font-family:inherit;transition:all .3s}
+        .input:focus,.textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+        .textarea{min-height:120px;resize:vertical}
+        .input::placeholder,.textarea::placeholder{color:var(--text-muted)}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .suggestions{margin-top:12px}
+        .suggestions-label{font-size:12px;color:var(--text-muted);margin-bottom:10px;display:block}
+        .chips{display:flex;flex-wrap:wrap;gap:8px}
+        .chip{padding:8px 14px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:8px;font-size:13px;color:var(--text-dim);cursor:pointer;transition:all .3s}
+        .chip:hover{background:rgba(124,58,237,.2);color:var(--text);transform:translateY(-1px)}
+        .options-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+        .option-btn{padding:14px 8px;border-radius:12px;border:2px solid transparent;background:var(--bg);cursor:pointer;text-align:center;transition:all .3s;color:var(--text)}
+        .option-btn:hover{background:rgba(255,255,255,.05);transform:translateY(-2px)}
+        .option-btn.active{border-color:var(--teal);background:rgba(13,148,136,.1)}
+        .option-btn .icon{font-size:22px;display:block;margin-bottom:6px}
+        .option-btn .name{font-size:11px;font-weight:600}
+        .palettes{display:flex;gap:12px;flex-wrap:wrap}
+        .palette-btn{padding:4px;border-radius:14px;border:3px solid transparent;background:transparent;cursor:pointer;transition:all .3s}
+        .palette-btn:hover{transform:scale(1.05)}.palette-btn.active{border-color:#fff}
+        .palette-colors{display:flex;border-radius:10px;overflow:hidden}
+        .palette-color{width:28px;height:28px}
+        .preview-container{position:sticky;top:100px}
+        .preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .preview-title{font-size:18px;font-weight:700}
+        .card-wrapper{perspective:1500px;margin-bottom:16px}
+        .card{aspect-ratio:5/7;border-radius:20px;position:relative;overflow:hidden;cursor:pointer;transition:transform .6s cubic-bezier(.23,1,.32,1);transform-style:preserve-3d}
+        .card:hover{transform:rotateY(5deg) rotateX(2deg)}.card.flipped{transform:rotateY(180deg)}
+        .card-face{position:absolute;inset:0;padding:28px;display:flex;flex-direction:column;justify-content:space-between;backface-visibility:hidden;border-radius:20px;overflow:hidden}
+        .card-back{transform:rotateY(180deg);display:flex;align-items:center;justify-content:center;text-align:center}
+        .card-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+        .particle{position:absolute;width:6px;height:6px;background:rgba(255,255,255,.5);border-radius:50%;animation:float 6s ease-in-out infinite}
+        .card-icon{font-size:44px}.card-to{margin-top:12px;font-size:15px;opacity:.85}
+        .card-body{flex:1;display:flex;align-items:center}
+        .card-message{font-size:clamp(18px,3vw,26px);font-style:italic;line-height:1.5;font-weight:500}
+        .card-from{font-size:15px;opacity:.85;text-align:right}
+        .card-back-inner{text-align:center}
+        .card-back-inner .icon{font-size:48px;margin-bottom:16px}
+        .card-back-inner .title{font-size:20px;font-weight:700}
+        .card-back-inner .sub{font-size:14px;opacity:.6;margin-top:8px}
+        .flip-hint{text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:24px}
+        .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+        .action{padding:14px 8px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all .3s;color:var(--text)}
+        .action:hover{background:var(--card-bg);transform:translateY(-2px)}
+        .action .icon{font-size:20px;display:block;margin-bottom:4px}
+        .action .label{font-size:11px;font-weight:500}
+        .purchase-btn{width:100%;padding:16px;border-radius:14px;border:none;font-size:17px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .3s}
+        .purchase-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(13,148,136,.4)}
+        .purchase-btn .price{opacity:.85;font-size:14px}
+        .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:28px}
+        .gallery-item{cursor:pointer;transition:transform .3s}
+        .gallery-item:hover{transform:translateY(-8px)}
+        .gallery-card{aspect-ratio:5/7;border-radius:16px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 16px 48px rgba(0,0,0,.4);position:relative}
+        .gallery-card .icon{font-size:40px}.gallery-card .msg{font-size:18px;font-style:italic;font-weight:500}
+        .gallery-card .artflow-badge{position:absolute;top:12px;right:12px;background:var(--stellar);padding:4px 8px;border-radius:12px;font-size:10px;font-weight:600}
+        .gallery-meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+        .gallery-meta .cat{color:var(--text-dim);font-size:14px}
+        .gallery-meta .cta{color:var(--teal);font-size:13px;opacity:0;transition:opacity .3s}
+        .gallery-item:hover .cta{opacity:1}
+        .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;max-width:1050px;margin:0 auto}
+        .pricing-card{padding:36px;border-radius:24px;position:relative}
+        .pricing-card.featured{transform:scale(1.02)}
+        .pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#fff;color:#0a0a0a;padding:6px 20px;border-radius:50px;font-size:13px;font-weight:700}
+        .pricing-name{font-size:24px;font-weight:700;margin-bottom:8px}
+        .pricing-price{font-size:48px;font-weight:800;margin-bottom:4px}
+        .pricing-price .per{font-size:16px;font-weight:400;color:var(--text-dim)}
+        .pricing-desc{color:var(--text-dim);margin-bottom:28px}
+        .pricing-features{list-style:none;margin-bottom:32px}
+        .pricing-features li{padding:10px 0;display:flex;align-items:center;gap:12px;font-size:15px}
+        .pricing-features li::before{content:"✓";color:var(--success);font-weight:700}
+        .pricing-btn{width:100%;padding:16px;border-radius:14px;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s}
+        .pricing-btn:hover{transform:translateY(-2px)}
+        .pricing-btn.primary{background:#fff;color:#0a0a0a}
+        .pricing-btn.secondary{background:rgba(255,255,255,.1);color:#fff}
+        .pricing-single{max-width:600px;margin:60px auto 0;padding:36px;border-radius:24px;text-align:center}
+        .pricing-single h3{font-size:24px;font-weight:700;margin-bottom:8px}
+        .pricing-single p{color:var(--text-dim);margin-bottom:20px}
+        footer{border-top:1px solid var(--border);padding:60px 24px}
+        .footer-inner{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
+        .footer-logo{display:flex;align-items:center;gap:10px}
+        .footer-logo .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+        .footer-logo .text{font-size:20px;font-weight:700}
+        .footer-links{display:flex;gap:32px}
+        .footer-links a{color:var(--text-dim);text-decoration:none;font-size:15px;transition:color .3s}
+        .footer-links a:hover{color:var(--text)}
+        .footer-copy{color:var(--text-muted);font-size:14px}
+        .footer-tm{color:var(--text-muted);font-size:12px;margin-top:12px;text-align:center;width:100%}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:2000;padding:24px;opacity:0;visibility:hidden;transition:all .3s}
+        .modal-overlay.open{opacity:1;visibility:visible}
+        .modal{max-width:440px;width:100%;padding:36px;border-radius:24px}
+        .modal h3{font-size:22px;font-weight:700;margin-bottom:20px}
+        .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+        .modal-btns button{padding:14px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
+        .modal-cancel{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+        .modal-confirm{background:var(--teal);border:none;color:#fff}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:16px 28px;border-radius:14px;font-size:15px;font-weight:500;background:var(--success);color:#fff;z-index:3000;transition:transform .4s cubic-bezier(.23,1,.32,1)}
+        .toast.show{transform:translateX(-50%) translateY(0)}.toast.error{background:var(--error)}
+        .artflow-section{background:linear-gradient(180deg,var(--bg) 0%,#0f1419 100%);padding:80px 24px}
+        .artflow-hero{text-align:center;margin-bottom:60px}
+        .artflow-badge{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:700;margin-bottom:20px;border:2px solid var(--stellar)}
+        .artflow-title{font-size:clamp(32px,6vw,56px);font-weight:800;margin-bottom:16px}
+        .artflow-subtitle{font-size:18px;color:var(--text-dim);max-width:600px;margin:0 auto}
+        .artflow-container{display:grid;grid-template-columns:1fr;gap:32px;max-width:1400px;margin:0 auto}
+        @media(min-width:1024px){.artflow-container{grid-template-columns:1fr 1fr}}
+        .drawing-panel{padding:24px;border-radius:24px;border:2px solid var(--stellar)}
+        .drawing-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+        .drawing-title{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px}
+        .drawing-title .badge{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--stellar);color:#fff}
+        .canvas-container{position:relative;background:#1a1a2e;border-radius:16px;overflow:hidden;margin-bottom:20px}
+        #drawingCanvas{width:100%;aspect-ratio:5/7;cursor:crosshair;touch-action:none;display:block}
+        .canvas-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:.3}
+        .canvas-overlay.hidden{opacity:0}
+        .canvas-hint{text-align:center;font-size:14px;color:var(--text-muted)}
+        .canvas-hint .icon{font-size:48px;display:block;margin-bottom:12px}
+        .drawing-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+        .tool-btn{padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;color:var(--text);font-size:13px;font-weight:500;transition:all .3s;display:flex;align-items:center;gap:6px}
+        .tool-btn:hover{background:var(--card-bg);transform:translateY(-2px)}
+        .tool-btn.active{border-color:var(--stellar);background:rgba(255,107,53,.15)}
+        .tool-btn .icon{font-size:18px}
+        .color-picker{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .color-swatch{width:32px;height:32px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .2s}
+        .color-swatch:hover{transform:scale(1.1)}.color-swatch.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,.4)}
+        .brush-size{display:flex;align-items:center;gap:12px;margin-top:12px}
+        .brush-size label{font-size:12px;color:var(--text-dim);font-weight:600}
+        .brush-size input[type=range]{flex:1;accent-color:var(--stellar)}
+        .ai-transform-btn{width:100%;padding:18px;border-radius:14px;border:none;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .3s;margin-top:16px}
+        .ai-transform-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(255,107,53,.4)}
+        .ai-transform-btn.processing{animation:pulse 1.5s infinite;pointer-events:none}
+        .ai-spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+        .results-panel{padding:24px;border-radius:24px}
+        .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .results-title{font-size:20px;font-weight:700}
+        .results-subtitle{font-size:14px;color:var(--text-dim);margin-top:4px}
+        .ai-results-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+        .ai-result-card{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;transition:all .3s;border:2px solid transparent}
+        .ai-result-card:hover{transform:translateY(-4px);border-color:var(--stellar)}
+        .ai-result-card.selected{border-color:var(--success);box-shadow:0 0 20px rgba(34,197,94,.3)}
+        .ai-result-image{aspect-ratio:5/7;background-size:cover;background-position:center;position:relative}
+        .ai-result-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 50%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+        .ai-result-style{font-size:14px;font-weight:700;margin-bottom:4px}
+        .ai-result-desc{font-size:12px;color:var(--text-dim)}
+        .ai-result-badge{position:absolute;top:12px;right:12px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+        .style-preview-placeholder{aspect-ratio:5/7;background:var(--card-bg);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+        .style-preview-placeholder .icon{font-size:48px;margin-bottom:12px;opacity:.5}
+        .style-preview-placeholder .text{font-size:14px;color:var(--text-muted)}
+        .finalize-actions{margin-top:24px;display:grid;gap:12px}
+        .finalize-btn{padding:16px;border-radius:14px;border:none;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .3s}
+        .finalize-btn:hover{transform:translateY(-2px)}
+        .finalize-btn.primary{background:var(--success);color:#fff}
+        .finalize-btn.secondary{background:var(--card-bg);color:var(--text);border:1px solid var(--border)}
+        .how-it-works{margin-top:80px;text-align:center}
+        .how-it-works h3{font-size:28px;font-weight:700;margin-bottom:40px}
+        .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;max-width:900px;margin:0 auto}
+        .step-card{text-align:center}
+        .step-number{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 16px}
+        .step-card h4{font-size:18px;font-weight:600;margin-bottom:8px}
+        .step-card p{font-size:14px;color:var(--text-dim)}
+        .example-styles{margin-top:60px}
+        .example-styles h4{font-size:20px;font-weight:700;margin-bottom:24px;text-align:center}
+        .example-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+        .example-item{text-align:center}
+        .example-before-after{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+        .example-img{flex:1;aspect-ratio:1;border-radius:12px;display:flex;align-items:center;justify-content:center}
+        .example-arrow{display:flex;align-items:center;font-size:20px;color:var(--stellar)}
+        .example-label{font-size:13px;font-weight:600;color:var(--text-dim)}
+        @media(max-width:768px){.nav-links{display:none}.mobile-toggle{display:block}.form-row{grid-template-columns:1fr}.options-grid{grid-template-columns:repeat(2,1fr)}.actions{grid-template-columns:repeat(2,1fr)}.pricing-card.featured{transform:none}.footer-inner{flex-direction:column;text-align:center}.footer-links{flex-wrap:wrap;justify-content:center;gap:20px}.ai-results-grid{grid-template-columns:1fr}.drawing-tools{justify-content:center}.hero-buttons{flex-direction:column;align-items:center}.btn{width:100%;max-width:300px;justify-content:center}}
+        @media print{nav,footer,.actions,.purchase-btn{display:none!important}body{background:#fff}}
+    </style>
+</head>
+<body>
+    <nav class="glass" id="navbar"><div class="nav-inner"><div class="logo" onclick="go('home')"><div class="logo-icon gradient-bg">🦎</div><span class="logo-text gradient-text">Chameleon Studios</span></div><div class="nav-links"><button class="nav-link active" data-page="home" onclick="go('home')">Home</button><button class="nav-link" data-page="draw" onclick="go('draw')">✏️ Draw & Create</button><button class="nav-link" data-page="create" onclick="go('create')">Create</button><button class="nav-link" data-page="gallery" onclick="go('gallery')">Gallery</button><button class="nav-link" data-page="pricing" onclick="go('pricing')">Pricing</button><button class="nav-cta stellar-gradient" onclick="go('draw')">Draw Your Card ✨</button></div><button class="mobile-toggle" onclick="toggleMobile()">☰</button></div></nav>
+    <div class="mobile-menu glass" id="mobileMenu"><button class="nav-link" onclick="go('home');toggleMobile()">Home</button><button class="nav-link" onclick="go('draw');toggleMobile()">✏️ Draw & Create</button><button class="nav-link" onclick="go('create');toggleMobile()">Create</button><button class="nav-link" onclick="go('gallery');toggleMobile()">Gallery</button><button class="nav-link" onclick="go('pricing');toggleMobile()">Pricing</button><button class="nav-cta stellar-gradient" onclick="go('draw');toggleMobile()">Draw Your Card ✨</button></div>
+
+    <main id="page-home">
+        <section class="hero"><div class="hero-blob hero-blob-1 gradient-bg"></div><div class="hero-blob hero-blob-2 stellar-gradient"></div><div class="hero-content"><div class="hero-badge glass"><span class="gradient-text">✨ NEW: Creative Chameleon Artflow™</span></div><h1><span class="gradient-text">Draw</span> Your Card,<br><span style="background:linear-gradient(-45deg,var(--stellar),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AI Makes It Beautiful</span></h1><p class="hero-subtitle">Sketch your card design by hand, and watch our AI transform your drawing into multiple stunning professional styles. You're in control — we just make it gorgeous.</p><div class="hero-buttons"><button class="btn btn-stellar" onclick="go('draw')">✏️ Start Drawing Free →</button><button class="btn btn-primary gradient-bg" onclick="go('create')">Use Templates</button><button class="btn btn-secondary" onclick="go('gallery')">View Gallery</button></div><div class="hero-tags"><span class="hero-tag">✏️ Draw Your Own</span><span class="hero-tag">🤖 AI Enhancement</span><span class="hero-tag">🎨 Multiple Styles</span><span class="hero-tag">✨ 3D Effects</span><span class="hero-tag">📧 Email Direct</span></div></div></section>
+        <section><div class="container"><div class="section-header"><span class="section-badge stellar-gradient">Creative Chameleon Artflow™</span><h2 class="section-title">Your Sketch → <span class="gradient-text">Professional Card</span></h2><p class="section-desc">Draw a simple flower, and AI transforms it into watercolor, oil painting, digital art, and more.</p></div><div class="features-grid"><div class="feature-card glass"><div class="feature-icon stellar-gradient">✏️</div><h3>Draw Anything</h3><p>Sketch your card design directly in our canvas. Draw flowers, hearts, messages — anything you imagine.</p></div><div class="feature-card glass"><div class="feature-icon stellar-gradient">🤖</div><h3>AI Enhancement</h3><p>Our AI keeps your original design intent while making it look professionally crafted.</p></div><div class="feature-card glass"><div class="feature-icon stellar-gradient">🎨</div><h3>Style Variations</h3><p>Get 4 different style interpretations: Watercolor, Digital Art, Minimalist, and Vintage Botanical.</p></div><div class="feature-card glass"><div class="feature-icon stellar-gradient">🎯</div><h3>You're In Control</h3><p>Your sketch defines the card. AI keeps your flower looking like YOUR flower — just prettier.</p></div></div></div></section>
+        <section class="cta-section"><div class="cta-box stellar-gradient"><h2>Ready to Draw Your Masterpiece?</h2><p>Sketch it rough. We'll make it beautiful.</p><button class="btn" onclick="go('draw')">✏️ Start Drawing Now →</button></div></section>
+    </main>
+
+    <main id="page-draw" class="hidden">
+        <div class="page artflow-section"><div class="container">
+            <div class="artflow-hero"><div class="artflow-badge stellar-gradient">✏️ Creative Chameleon Artflow™</div><h1 class="artflow-title">Draw Your Card, <span class="gradient-text">AI Makes It Art</span></h1><p class="artflow-subtitle">Sketch your design below. Our AI will transform your drawing into multiple professional styles.</p></div>
+            <div class="artflow-container">
+                <div class="drawing-panel glass">
+                    <div class="drawing-header"><div class="drawing-title">🎨 Your Canvas <span class="badge">DRAW HERE</span></div><button class="tool-btn" onclick="clearCanvas()"><span class="icon">🗑️</span> Clear</button></div>
+                    <div class="canvas-container"><canvas id="drawingCanvas" width="400" height="560"></canvas><div class="canvas-overlay" id="canvasHint"><div class="canvas-hint"><span class="icon">✏️</span>Draw your card design here<br><small>Try a flower, heart, or any shape!</small></div></div></div>
+                    <div class="drawing-tools"><button class="tool-btn active" id="penTool" onclick="setTool('pen')"><span class="icon">✏️</span> Pen</button><button class="tool-btn" id="brushTool" onclick="setTool('brush')"><span class="icon">🖌️</span> Brush</button><button class="tool-btn" id="eraserTool" onclick="setTool('eraser')"><span class="icon">🧽</span> Eraser</button><button class="tool-btn" onclick="undoLast()"><span class="icon">↩️</span> Undo</button></div>
+                    <div class="form-group"><label class="form-label">Drawing Color</label><div class="color-picker" id="colorPicker"></div></div>
+                    <div class="brush-size"><label>Brush Size:</label><input type="range" id="brushSize" min="2" max="30" value="4" oninput="updateBrushSize()"><span id="brushSizeValue">4px</span></div>
+                    <div class="form-group" style="margin-top:20px"><label class="form-label">Describe Your Drawing (Optional)</label><input type="text" class="input" id="drawingDescription" placeholder="e.g., A rose with leaves for my mom's birthday"></div>
+                    <button class="ai-transform-btn stellar-gradient" id="transformBtn" onclick="transformWithAI()"><span class="icon">🤖</span> Transform with AI Magic ✨</button>
+                </div>
+                <div class="results-panel glass">
+                    <div class="results-header"><div><div class="results-title">🎨 AI Style Variations</div><div class="results-subtitle">Select your favorite style below</div></div></div>
+                    <div class="ai-results-grid" id="aiResultsGrid"></div>
+                    <div class="finalize-actions" id="finalizeActions" style="display:none"><button class="finalize-btn primary" onclick="finalizeCard()"><span>✅</span> Use This Design</button><button class="finalize-btn secondary" onclick="openRequestModal()"><span>📧</span> Request Custom Edit</button><button class="finalize-btn secondary" onclick="regenerateStyles()"><span>🔄</span> Generate More Styles</button></div>
+                </div>
+            </div>
+            <div class="how-it-works"><h3>How <span class="gradient-text">Artflow™</span> Works</h3><div class="steps-grid"><div class="step-card"><div class="step-number stellar-gradient">1</div><h4>✏️ Draw Your Idea</h4><p>Sketch anything — don't worry about perfection!</p></div><div class="step-card"><div class="step-number stellar-gradient">2</div><h4>🤖 AI Transforms It</h4><p>Our AI makes it look professionally crafted.</p></div><div class="step-card"><div class="step-number stellar-gradient">3</div><h4>🎨 Pick Your Style</h4><p>Choose from watercolor, digital, line art, or vintage.</p></div><div class="step-card"><div class="step-number stellar-gradient">4</div><h4>📧 Send or Print</h4><p>Download, print, or email your unique card!</p></div></div></div>
+        </div></div>
+    </main>
+
+    <main id="page-create" class="hidden">
+        <div class="page"><div class="container">
+            <div class="page-header"><h1>Create Your <span class="gradient-text">Masterpiece</span></h1><p>Choose an occasion — or <a href="#" onclick="go('draw');return false">draw your own card</a></p></div>
+            <div class="categories-scroll"><div class="categories" id="catsContainer"></div></div>
+            <div class="builder">
+                <div class="panel glass">
+                    <div class="tabs"><button class="tab active" onclick="switchTab('content')">Content</button><button class="tab" onclick="switchTab('design')">Design</button></div>
+                    <div id="tab-content"><div class="form-group"><label class="form-label">Your Message</label><textarea class="textarea" id="msg" placeholder="Write your heartfelt message here..." oninput="upd()"></textarea><div class="suggestions"><span class="suggestions-label">✨ AI Suggestions</span><div class="chips" id="chipsContainer"></div></div></div><div class="form-row"><div class="form-group"><label class="form-label">To</label><input type="text" class="input" id="cardTo" placeholder="Recipient's name" oninput="upd()"></div><div class="form-group"><label class="form-label">From</label><input type="text" class="input" id="cardFrom" placeholder="Your name" oninput="upd()"></div></div></div>
+                    <div id="tab-design" class="hidden"><div class="form-group"><label class="form-label">Color Theme</label><div class="palettes" id="palsContainer"></div></div><div class="form-group"><label class="form-label">Effects</label><div class="options-grid" id="fxContainer"></div></div></div>
+                </div>
+                <div><div class="preview-container"><div class="preview-header"><span class="preview-title">👁️ Live Preview</span></div><div class="card-wrapper"><div class="card" id="cardPreview" onclick="flip()"><div class="card-face card-front" id="cardFront"><div class="card-particles" id="cardParticles"></div><div><span class="card-icon" id="prevIcon">🙏</span><p class="card-to" id="prevTo"></p></div><div class="card-body"><p class="card-message" id="prevMsg">Your message will appear here...</p></div><div><p class="card-from" id="prevFrom"></p></div></div><div class="card-face card-back" id="cardBack"><div class="card-back-inner"><span class="icon">🦎</span><p class="title">Made with Chameleon Studios</p><p class="sub">Creative Chameleon Artflow™</p></div></div></div></div><p class="flip-hint">Click card to flip</p><div class="actions"><button class="action" onclick="window.print()"><span class="icon">🖨️</span><span class="label">Print</span></button><button class="action" onclick="toast('Download starting...')"><span class="icon">⬇️</span><span class="label">Download</span></button><button class="action" onclick="openModal()"><span class="icon">📧</span><span class="label">Email</span></button><button class="action" onclick="share()"><span class="icon">🔗</span><span class="label">Share</span></button></div><button class="purchase-btn gradient-bg" onclick="toast('Redirecting to checkout...')">Get This Design <span class="price">$4.99</span></button></div></div>
+            </div>
+        </div></div>
+    </main>
+
+    <main id="page-gallery" class="hidden"><div class="page"><div class="container"><div class="page-header"><h1>Inspiration <span class="gradient-text">Gallery</span></h1><p>Browse designs — many made with Artflow™!</p></div><div class="gallery-grid" id="galGrid"></div></div></div></main>
+
+    <main id="page-pricing" class="hidden">
+        <div class="page"><div class="container">
+            <div class="page-header"><h1>Simple, <span class="gradient-text">Transparent</span> Pricing</h1><p>Choose the plan that works for you</p></div>
+            <div class="pricing-grid">
+                <div class="pricing-card glass"><h3 class="pricing-name">Free</h3><div class="pricing-price">$0</div><p class="pricing-desc">Perfect for trying it out</p><ul class="pricing-features"><li>3 cards per month</li><li>Basic templates</li><li>1 Artflow™ transform/day</li><li>Digital downloads</li></ul><button class="pricing-btn secondary" onclick="go('draw')">Start Drawing</button></div>
+                <div class="pricing-card stellar-gradient featured"><span class="pricing-badge">Most Popular</span><h3 class="pricing-name">Creator</h3><div class="pricing-price">$9.99<span class="per">/mo</span></div><p class="pricing-desc">For regular card makers</p><ul class="pricing-features"><li>Unlimited cards</li><li>Unlimited Artflow™</li><li>All style variations</li><li>Print-ready exports</li><li>Email sending</li></ul><button class="pricing-btn primary" onclick="go('draw')">Start Creating</button></div>
+                <div class="pricing-card glass"><h3 class="pricing-name">Business</h3><div class="pricing-price">$29.99<span class="per">/mo</span></div><p class="pricing-desc">For teams and businesses</p><ul class="pricing-features"><li>Everything in Creator</li><li>Custom branding</li><li>Bulk creation</li><li>API access</li><li>Team accounts</li></ul><button class="pricing-btn secondary" onclick="openContactModal()">Contact Sales</button></div>
+            </div>
+            <div class="pricing-single glass"><h3>Just Need One Card?</h3><p>Purchase individual designs for $4.99 each</p><button class="btn btn-primary gradient-bg" onclick="go('draw')">Draw Your Card</button></div>
+        </div></div>
+    </main>
+
+    <footer><div class="footer-inner"><div class="footer-logo"><div class="icon stellar-gradient">🦎</div><span class="text">Chameleon Studios</span></div><div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a><a href="mailto:rayzenart@yahoo.com">Contact</a></div><p class="footer-copy">© 2026 Chameleon Studios. Every creation unique.</p><p class="footer-tm">Creative Chameleon Artflow™ is a trademark of Stellar Studios. All rights reserved. CC BY-NC 4.0</p></div></footer>
+
+    <div class="modal-overlay" id="emailModal"><div class="modal glass"><h3>📧 Send via Email</h3><div class="form-group"><label class="form-label">Recipient Email</label><input type="email" class="input" id="emailInput" placeholder="friend@example.com"></div><div class="modal-btns"><button class="modal-cancel" onclick="closeModal()">Cancel</button><button class="modal-confirm" onclick="sendEmail()">Send Card</button></div></div></div>
+    <div class="modal-overlay" id="requestModal"><div class="modal glass"><h3>📧 Request Custom Edit</h3><p style="color:var(--text-dim);font-size:14px;margin-bottom:16px">Describe changes and our team will create a custom version.</p><div class="form-group"><label class="form-label">Your Email</label><input type="email" class="input" id="requestEmail" placeholder="your@email.com"></div><div class="form-group"><label class="form-label">What changes?</label><textarea class="textarea" id="requestDetails" placeholder="e.g., Make petals rounder, add green leaves..."></textarea></div><div class="modal-btns"><button class="modal-cancel" onclick="closeRequestModal()">Cancel</button><button class="modal-confirm" onclick="submitRequest()">Send Request</button></div></div></div>
+    <div class="modal-overlay" id="contactModal"><div class="modal glass"><h3>📞 Contact Sales</h3><div class="form-group"><label class="form-label">Your Email</label><input type="email" class="input" id="contactEmail" placeholder="your@company.com"></div><div class="form-group"><label class="form-label">Message</label><textarea class="textarea" id="contactMessage" placeholder="Tell us about your needs..."></textarea></div><div class="modal-btns"><button class="modal-cancel" onclick="closeContactModal()">Cancel</button><button class="modal-confirm" onclick="submitContact()">Send Inquiry</button></div></div></div>
+    <div class="toast" id="toastEl"></div>
+
+    <script>
+    (function(){
+        const CONFIG={contactEmail:'rayzenart@yahoo.com',productName:'Creative Chameleon Artflow™',companyName:'Stellar Studios'};
+        const CATS={thankYou:{name:"Thank You",icon:"🙏",colors:["#0D9488","#059669"],tips:["Gratitude flows like a river","Your kindness left a mark","Thank you from the bottom of my heart"]},birthday:{name:"Birthday",icon:"🎂",colors:["#EA580C","#D97706"],tips:["Another year of awesome!","Make a wish!","Cheers to you!"]},holiday:{name:"Holiday",icon:"🎄",colors:["#DC2626","#059669"],tips:["Warmest wishes this season","Peace, joy & happiness"]},love:{name:"Love",icon:"💕",colors:["#DB2777","#BE185D"],tips:["You have my heart","Always & forever","My favorite person"]},congrats:{name:"Congrats",icon:"🎉",colors:["#D97706","#F59E0B"],tips:["You did it!","So proud of you!"]},wedding:{name:"Wedding",icon:"💒",colors:["#F472B6","#EC4899"],tips:["Congrats to the happy couple!","Here's to forever"]},baby:{name:"Baby",icon:"👶",colors:["#60A5FA","#3B82F6"],tips:["Welcome to the world!","A star is born"]},graduation:{name:"Graduation",icon:"🎓",colors:["#8B5CF6","#7C3AED"],tips:["You did it, grad!","Your future is bright"]},getWell:{name:"Get Well",icon:"🌸",colors:["#F472B6","#FB923C"],tips:["Feel better soon!","Sending healing thoughts"]}};
+        const FX=[{id:"particles",icon:"✨",name:"Sparkle"},{id:"neon",icon:"💡",name:"Neon"},{id:"glass",icon:"🪟",name:"Glass"},{id:"gradient",icon:"🌊",name:"Gradient"}];
+        const PALS=[["#0D9488","#059669","#047857"],["#7C3AED","#DB2777","#F43F5E"],["#EA580C","#D97706","#F59E0B"],["#2563EB","#3B82F6","#60A5FA"],["#DC2626","#F43F5E","#FB7185"],["#059669","#10B981","#34D399"]];
+        const DRAW_COLORS=["#ffffff","#ff6b6b","#feca57","#48dbfb","#1dd1a1","#5f27cd","#ff9ff3","#54a0ff","#00d2d3","#ff9f43","#2e2e2e"];
+        const AI_STYLES=[{id:"watercolor",name:"Watercolor",icon:"🎨",desc:"Soft, flowing colors",badge:"Popular",badgeColor:"#0D9488",bgGrad:["#a8dadc","#f1faee","#457b9d"]},{id:"digital",name:"Digital Art",icon:"💫",desc:"Vibrant digital illustration",badge:"Trending",badgeColor:"#7C3AED",bgGrad:["#ff006e","#8338ec","#3a86ff"]},{id:"lineart",name:"Minimalist Line",icon:"✒️",desc:"Elegant continuous line art",badge:"",badgeColor:"",bgGrad:["#f8f9fa","#e9ecef","#dee2e6"]},{id:"botanical",name:"Vintage Botanical",icon:"🌿",desc:"Classic botanical style",badge:"Classic",badgeColor:"#D97706",bgGrad:["#dda15e","#bc6c25","#606c38"]}];
+        let cat="thankYou",fx=["gradient"],pal=0,flipped=false,selectedStyle=null,isProcessing=false;
+        let canvas,ctx,isDrawing=false,lastX=0,lastY=0,currentTool="pen",currentColor="#ffffff",brushSize=4,drawingHistory=[],historyIndex=-1,hasDrawn=false;
+
+        window.go=function(p){document.querySelectorAll('main').forEach(m=>m.classList.add('hidden'));const page=document.getElementById('page-'+p);if(page)page.classList.remove('hidden');document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.page===p));window.scrollTo({top:0,behavior:'smooth'});document.getElementById('mobileMenu').classList.remove('open');if(p==='create')initCreate();if(p==='gallery')initGallery();if(p==='draw')setTimeout(initCanvas,100)};
+        window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('open')};
+
+        function initCanvas(){canvas=document.getElementById('drawingCanvas');if(!canvas)return;ctx=canvas.getContext('2d');const container=canvas.parentElement;const w=container.offsetWidth;const h=w*1.4;canvas.width=w;canvas.height=h;ctx.fillStyle='#1a1a2e';ctx.fillRect(0,0,canvas.width,canvas.height);saveState();canvas.addEventListener('mousedown',startDrawing);canvas.addEventListener('mousemove',draw);canvas.addEventListener('mouseup',stopDrawing);canvas.addEventListener('mouseout',stopDrawing);canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];const r=canvas.getBoundingClientRect();startDrawing({offsetX:t.clientX-r.left,offsetY:t.clientY-r.top})},{passive:false});canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const r=canvas.getBoundingClientRect();draw({offsetX:t.clientX-r.left,offsetY:t.clientY-r.top})},{passive:false});canvas.addEventListener('touchend',stopDrawing);renderColorPicker();renderAIPlaceholders()}
+        function startDrawing(e){isDrawing=true;lastX=e.offsetX;lastY=e.offsetY;if(!hasDrawn){hasDrawn=true;document.getElementById('canvasHint').classList.add('hidden')}}
+        function draw(e){if(!isDrawing)return;ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(e.offsetX,e.offsetY);if(currentTool==='eraser'){ctx.strokeStyle='#1a1a2e';ctx.lineWidth=brushSize*3}else if(currentTool==='brush'){ctx.strokeStyle=currentColor;ctx.lineWidth=brushSize*2;ctx.globalAlpha=0.6}else{ctx.strokeStyle=currentColor;ctx.lineWidth=brushSize;ctx.globalAlpha=1}ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();ctx.globalAlpha=1;lastX=e.offsetX;lastY=e.offsetY}
+        function stopDrawing(){if(isDrawing){isDrawing=false;saveState()}}
+        function saveState(){historyIndex++;drawingHistory=drawingHistory.slice(0,historyIndex);drawingHistory.push(canvas.toDataURL())}
+        window.undoLast=function(){if(historyIndex>0){historyIndex--;const img=new Image();img.onload=function(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0)};img.src=drawingHistory[historyIndex]}};
+        window.clearCanvas=function(){ctx.fillStyle='#1a1a2e';ctx.fillRect(0,0,canvas.width,canvas.height);saveState();hasDrawn=false;document.getElementById('canvasHint').classList.remove('hidden');selectedStyle=null;document.getElementById('finalizeActions').style.display='none';renderAIPlaceholders()};
+        window.setTool=function(t){currentTool=t;document.getElementById('penTool').classList.toggle('active',t==='pen');document.getElementById('brushTool').classList.toggle('active',t==='brush');document.getElementById('eraserTool').classList.toggle('active',t==='eraser')};
+        window.setColor=function(c){currentColor=c;renderColorPicker()};
+        window.updateBrushSize=function(){brushSize=parseInt(document.getElementById('brushSize').value);document.getElementById('brushSizeValue').textContent=brushSize+'px'};
+        function renderColorPicker(){let h='';DRAW_COLORS.forEach(c=>{const isActive=c===currentColor;const border=c==="#ffffff"?';border:1px solid #333':'';h+=`<div class="color-swatch${isActive?' active':''}" style="background:${c}${border}" onclick="setColor('${c}')"></div>`});document.getElementById('colorPicker').innerHTML=h}
+        function renderAIPlaceholders(){let h='';AI_STYLES.forEach(s=>{h+=`<div class="ai-result-card"><div class="style-preview-placeholder"><span class="icon">${s.icon}</span><span class="text">${s.name}<br><small>Draw to see preview</small></span></div></div>`});document.getElementById('aiResultsGrid').innerHTML=h}
+        window.transformWithAI=function(){if(!hasDrawn){toast('Please draw something first!','error');return}if(isProcessing)return;isProcessing=true;const btn=document.getElementById('transformBtn');btn.innerHTML='<div class="ai-spinner"></div> AI is working...';btn.classList.add('processing');setTimeout(()=>{isProcessing=false;btn.innerHTML='<span class="icon">🤖</span> Transform with AI Magic ✨';btn.classList.remove('processing');renderAIResults();document.getElementById('finalizeActions').style.display='grid';toast('✨ 4 style variations generated!')},2500)};
+        function renderAIResults(){const drawingData=canvas.toDataURL();let h='';AI_STYLES.forEach(s=>{const isSelected=selectedStyle===s.id;h+=`<div class="ai-result-card${isSelected?' selected':''}" onclick="selectStyle('${s.id}')"><div class="ai-result-image" style="background:linear-gradient(135deg,${s.bgGrad.join(',')});position:relative"><div style="position:absolute;inset:0;background-image:url(${drawingData});background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0.7;mix-blend-mode:multiply"></div><div class="ai-result-overlay"><div class="ai-result-style">${s.icon} ${s.name}</div><div class="ai-result-desc">${s.desc}</div></div>${s.badge?`<div class="ai-result-badge" style="background:${s.badgeColor}">${s.badge}</div>`:''}</div></div>`});document.getElementById('aiResultsGrid').innerHTML=h}
+        window.selectStyle=function(id){selectedStyle=id;renderAIResults();toast('Selected: '+AI_STYLES.find(s=>s.id===id).name)};
+        window.regenerateStyles=function(){if(!hasDrawn){toast('Please draw something first!','error');return}isProcessing=true;document.getElementById('transformBtn').innerHTML='<div class="ai-spinner"></div> Generating...';setTimeout(()=>{isProcessing=false;document.getElementById('transformBtn').innerHTML='<span class="icon">🤖</span> Transform with AI Magic ✨';renderAIResults();toast('✨ New variations generated!')},2000)};
+        window.finalizeCard=function(){if(!selectedStyle){toast('Please select a style first!','error');return}openModal()};
+
+        function initCreate(){renderCats();renderChips();renderPals();renderFx();upd()}
+        function renderCats(){let h='';for(let k in CATS){const c=CATS[k];h+=`<button class="cat-btn${k===cat?' active':''}" onclick="setCat('${k}')"><span class="icon">${c.icon}</span><span class="label">${c.name}</span></button>`}document.getElementById('catsContainer').innerHTML=h}
+        window.setCat=function(k){cat=k;renderCats();renderChips();upd()};
+        function renderChips(){const c=CATS[cat];let h='';c.tips.forEach(t=>{const escaped=t.replace(/'/g,"\\'");h+=`<button class="chip" onclick="useChip('${escaped}')">${t}</button>`});document.getElementById('chipsContainer').innerHTML=h}
+        window.useChip=function(t){document.getElementById('msg').value=t;upd();toast('Message added!')};
+        function renderPals(){let h='';PALS.forEach((p,i)=>{h+=`<button class="palette-btn${i===pal?' active':''}" onclick="setPal(${i})"><div class="palette-colors">${p.map(c=>`<div class="palette-color" style="background:${c}"></div>`).join('')}</div></button>`});document.getElementById('palsContainer').innerHTML=h}
+        window.setPal=function(i){pal=i;renderPals();upd()};
+        function renderFx(){let h='';FX.forEach(f=>{const isActive=fx.indexOf(f.id)>-1;h+=`<button class="option-btn${isActive?' active':''}" onclick="toggleFx('${f.id}')"><span class="icon">${f.icon}</span><span class="name">${f.name}</span></button>`});document.getElementById('fxContainer').innerHTML=h}
+        window.toggleFx=function(id){const i=fx.indexOf(id);if(i>-1)fx.splice(i,1);else fx.push(id);renderFx();upd()};
+        window.switchTab=function(t){document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab.textContent.toLowerCase()===t));document.getElementById('tab-content').classList.toggle('hidden',t!=='content');document.getElementById('tab-design').classList.toggle('hidden',t!=='design')};
+        function upd(){const c=CATS[cat];const cols=PALS[pal];const msg=document.getElementById('msg')?.value||'';const to=document.getElementById('cardTo')?.value||'';const from=document.getElementById('cardFrom')?.value||'';document.getElementById('prevIcon').textContent=c.icon;document.getElementById('prevMsg').textContent=msg||'Your message will appear here...';document.getElementById('prevTo').textContent=to?'Dear '+to+',':'';document.getElementById('prevFrom').textContent=from?'— '+from:'';const front=document.getElementById('cardFront');const back=document.getElementById('cardBack');const grad=`linear-gradient(135deg,${cols[0]},${cols[1]},${cols[2]})`;if(fx.indexOf('glass')>-1){front.style.background='rgba(255,255,255,0.1)';front.style.backdropFilter='blur(20px)'}else{front.style.background=grad;front.style.backdropFilter='none'}back.style.background=grad;const parts=document.getElementById('cardParticles');if(fx.indexOf('particles')>-1){let ph='';for(let i=0;i<15;i++)ph+=`<div class="particle" style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*5}s"></div>`;parts.innerHTML=ph}else parts.innerHTML='';const card=document.getElementById('cardPreview');if(fx.indexOf('neon')>-1)card.style.boxShadow=`0 0 60px ${cols[0]}50, 0 0 120px ${cols[1]}30`;else card.style.boxShadow=''}
+        window.flip=function(){flipped=!flipped;document.getElementById('cardPreview').classList.toggle('flipped',flipped)};
+
+        function initGallery(){const items=[{cat:'thankYou',msg:'Your kindness means the world',artflow:true},{cat:'birthday',msg:'Another year of awesome!',artflow:false},{cat:'love',msg:'You have my heart forever',artflow:true},{cat:'congrats',msg:'You absolutely crushed it!',artflow:false},{cat:'wedding',msg:'Cheers to forever!',artflow:true},{cat:'graduation',msg:'The future is yours!',artflow:true}];let h='';items.forEach(it=>{const c=CATS[it.cat];const escaped=it.msg.replace(/'/g,"\\'");h+=`<div class="gallery-item" onclick="go('create');setCat('${it.cat}');useChip('${escaped}');"><div class="gallery-card" style="background:linear-gradient(135deg,${c.colors[0]},${c.colors[1]})"><span class="icon">${c.icon}</span><p class="msg">${it.msg}</p>${it.artflow?'<span class="artflow-badge">Artflow™</span>':''}</div><div class="gallery-meta"><span class="cat">${c.name}</span><span class="cta">Use Template →</span></div></div>`});document.getElementById('galGrid').innerHTML=h}
+
+        window.openModal=function(){document.getElementById('emailModal').classList.add('open')};
+        window.closeModal=function(){document.getElementById('emailModal').classList.remove('open')};
+        window.openRequestModal=function(){document.getElementById('requestModal').classList.add('open')};
+        window.closeRequestModal=function(){document.getElementById('requestModal').classList.remove('open')};
+        window.openContactModal=function(){document.getElementById('contactModal').classList.add('open')};
+        window.closeContactModal=function(){document.getElementById('contactModal').classList.remove('open')};
+
+        window.sendEmail=function(){const email=document.getElementById('emailInput').value;if(!email||!email.includes('@')){toast('Please enter a valid email','error');return}window.location.href=`mailto:${email}?cc=${CONFIG.contactEmail}&subject=${encodeURIComponent('Your Card from Chameleon Studios')}&body=${encodeURIComponent(`You've received a card made with ${CONFIG.productName}!\n\n---\nCreated by ${CONFIG.companyName}`)}`;toast('Card sent to '+email+'!');closeModal();document.getElementById('emailInput').value=''};
+        window.submitRequest=function(){const email=document.getElementById('requestEmail').value;const details=document.getElementById('requestDetails').value;if(!email||!email.includes('@')){toast('Please enter a valid email','error');return}if(!details){toast('Please describe changes','error');return}window.location.href=`mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent(CONFIG.productName+' Custom Request')}&body=${encodeURIComponent(`Customer: ${email}\n\nRequested Changes:\n${details}`)}`;toast('Request sent!');closeRequestModal();document.getElementById('requestEmail').value='';document.getElementById('requestDetails').value=''};
+        window.submitContact=function(){const email=document.getElementById('contactEmail').value;const message=document.getElementById('contactMessage').value;if(!email||!email.includes('@')){toast('Please enter a valid email','error');return}window.location.href=`mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent('Business Inquiry - Chameleon Studios')}&body=${encodeURIComponent(`From: ${email}\n\n${message}`)}`;toast('Inquiry sent!');closeContactModal();document.getElementById('contactEmail').value='';document.getElementById('contactMessage').value=''};
+        window.share=function(){if(navigator.share)navigator.share({title:'Check out my card!',text:`Made with ${CONFIG.productName}`,url:window.location.href});else{navigator.clipboard.writeText(window.location.href);toast('Link copied!')}};
+        window.toast=function(msg,type='success'){const t=document.getElementById('toastEl');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)};
+
+        window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50)},{passive:true});
+        window.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeRequestModal();closeContactModal();document.getElementById('mobileMenu').classList.remove('open')}});
+        document.addEventListener('DOMContentLoaded',()=>go('home'));
+    })();
+    </script>
+</body>
+</html>
